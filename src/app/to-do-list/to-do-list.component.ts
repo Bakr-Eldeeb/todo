@@ -40,7 +40,8 @@ export class ToDoListComponent implements OnInit {
     this.newTask = '';
   }
 
-  deleteTask(id: string) {
-    this.taskService.deleteTask(id);
-  }
+  deleteTask(id: string | undefined) {
+  if (!id) return;
+  this.taskService.deleteTask(id);
+}
 }
