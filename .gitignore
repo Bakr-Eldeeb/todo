@@ -1,0 +1,49 @@
+# Angular
+dist/
+.angular/
+.tmp/
+out-tsc/
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# IDEs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment files
+.env
+
+# Build output
+build/
+coverage/
+
+# Firebase (لو استخدمته)
+.firebase/
+
+# Netlify (اختياري)
+.netlify/
+
+# Junk / unnecessary files
+*.zip
+*.rar
+*.7z
+
+
+
+# Temporary files
+*.tmp
+*.temp

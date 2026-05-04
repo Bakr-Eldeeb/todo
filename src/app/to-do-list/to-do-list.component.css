@@ -1,0 +1,172 @@
+
+:root {
+  --bg-color: #f0f2f5;
+  --card-bg: #ffffff;
+  --primary: #00bfff;
+  --text-main: #1a202c;
+  --high-priority: #ffe5e5;
+  --high-text: #ff4d4d;
+  --medium-priority: #fff4e5;
+  --medium-text: #ff9800;
+  --low-priority: #e5f9e5;
+  --low-text: #4caf50;
+}
+
+body {
+  background-color: var(--bg-color);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+}
+
+.container { padding: 30px; }
+
+/* Header & Form Section */
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.welcome-text h2 { margin: 0; font-size: 28px; font-weight: 800; }
+.welcome-text p { color: #718096; margin: 5px 0 0; }
+
+.add-task-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* Board Layout */
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.column {
+  background: transparent;
+}
+
+.column-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.dot { height: 10px; width: 10px; border-radius: 50%; margin-right: 10px; }
+.todo-dot { background: #718096; }
+.inprogress-dot { background: #00bfff; }
+.done-dot { background: #4caf50; }
+
+/* Task Cards */
+.card {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.priority-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: capitalize;
+  margin-bottom: 10px;
+}
+
+.priority-high { background: var(--high-priority); color: var(--high-text); }
+.priority-medium { background: var(--medium-priority); color: var(--medium-text); }
+.priority-low { background: var(--low-priority); color: var(--low-text); }
+
+.card h4 { margin: 0 0 8px; font-size: 16px; color: var(--text-main); }
+.card p { margin: 0; font-size: 14px; color: #a0aec0; }
+
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.action-btn {
+  background: none;
+  border: 1px solid #edf2f7;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 5px;
+  transition: 0.2s;
+}
+
+.action-btn:hover { background: #f7fafc; }
+
+
+.add-task-btn{
+  background-color: red;
+  color: black;
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.shared-label {
+  font-size: 10px;
+  color: #00bfff;
+  font-style: italic;
+}
+
+.share-box {
+  margin-top: 15px;
+  display: flex;
+  gap: 5px;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 10px;
+}
+
+.share-input {
+  flex: 1;
+  font-size: 11px;
+  padding: 5px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+}
+
+.share-box button {
+  font-size: 10px;
+  background: #00bfff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.action-btn.delete:hover {
+  background-color: #ffe5e5;
+  border-color: #ff4d4d;
+}
+
+/* Fix for Button Color */
+.add-task-btn {
+  background-color: #00bfff !important; /* Changed from red to match your primary */
+  color: white !important;
+}
+
+/* Ensure Board scrolls if small screen */
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  overflow-x: auto;
+}
