@@ -35,4 +35,7 @@ export class HomeComponentComponent {
       alert("Login Failed");
     }
   }
+  goToTodo() {
+  this.router.navigate(['/app/todo']);
+}
 }
