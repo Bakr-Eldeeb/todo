@@ -1,83 +1,34 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
-import { Router } from '@angular/router';
-import { DataService } from '../services/data.service';
+import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebase.config';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [ReactiveFormsModule],
-  templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.css']
+  imports: [ReactiveFormsModule, RouterLink],
+  templateUrl: './signup.component.html'
 })
 export class SignupComponent {
 
-  registerForm: FormGroup;
+  registerForm = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required, Validators.minLength(6)])
+  });
 
-  constructor(
-    private dataService: DataService,
-    private router: Router,
-    private fb: FormBuilder
-  ) {
-    this.registerForm = this.fb.group({
-      firstName: ['', Validators.required],
-      secondName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required]
-    }, { 
-      validators: SignupComponent.passwordsMatch
-    });
-  }
+  constructor(private router: Router) {}
 
-  static passwordsMatch(control: AbstractControl): ValidationErrors | null {
-    const password = control.get('password')?.value;
-    const confirmPassword = control.get('confirmPassword')?.value;
-    return (password && confirmPassword && password !== confirmPassword) 
-      ? { passwordMismatch: true } 
-      : null;
-  }
+  async register() {
+    if (this.registerForm.invalid) return;
 
-  onSubmit() {
-    console.log('Form Submitted');
-    console.log('Form Valid?', this.registerForm.valid);
-    console.log('Form Errors:', this.registerForm.errors);
-    console.log('Form Value:', this.registerForm.value);
+    const { email, password } = this.registerForm.value;
 
-    if (this.registerForm.invalid) {
-      if (this.registerForm.errors?.['passwordMismatch']) {
-        alert('❌ Passwords do not match!');
-      } else {
-        alert('❌ Please fill all fields correctly');
-      }
-      return;
+    try {
+      await createUserWithEmailAndPassword(auth, email!, password!);
+      this.router.navigate(['/signin']);
+    } catch (err) {
+      alert("Signup Failed");
     }
-
-    const formValue = this.registerForm.value;
-    const newUser = {
-      firstName: formValue.firstName,
-      secondName: formValue.secondName,
-      email: formValue.email,
-      password: formValue.password
-    };
-
-    console.log('Sending user to service:', newUser);
-
-    this.dataService.addUser(newUser).subscribe({
-      next: (res) => {
-        console.log('Success response:', res);
-        if (res.success) {
-          alert('✅ User registered successfully!');
-          this.router.navigate(['/']);
-          this.registerForm.reset();
-        } else {
-          alert(res.message || 'Registration failed');
-        }
-      },
-      error: (err) => {
-        console.error('Error:', err);
-        alert('Registration failed. Please try again.');
-      }
-    });
   }
 }

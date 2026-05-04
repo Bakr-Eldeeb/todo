@@ -1,39 +1,21 @@
-<div class="t">
-  <div class="bg-black father">
-    <div class="form-container formm">
-      <h1>Register your account</h1>
-      
-      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="form">
-        
-        <div class="form-group">
-          <label for="first">First Name</label>
-          <input formControlName="firstName" type="text" id="first" class="input-full" />
-        </div>
+<div class="signup-wrapper">
+  <div class="signup-card">
 
-        <div class="form-group">
-          <label for="second">Second Name</label>
-          <input formControlName="secondName" type="text" id="second" class="input-full" />
-        </div>
+    <h2>Sign Up</h2>
 
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input formControlName="email" type="email" id="email" class="input-full" />
-        </div>
+    <form [formGroup]="registerForm" (ngSubmit)="register()">
 
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input formControlName="password" type="password" id="password" class="input-full" />
-        </div>
+      <input formControlName="email" placeholder="Email" type="email">
 
-        <div class="form-group">
-          <label for="confirmPassword">Re-enter your password</label>
-          <input formControlName="confirmPassword" type="password" id="confirmPassword" class="input-full" />
-        </div>
+      <input formControlName="password" placeholder="Password" type="password">
 
-        <button type="submit" class="btn btn-primary" routerLink="/app-home-component">
-          Register
-        </button>
-      </form>
-    </div>
+      <button type="submit" [disabled]="registerForm.invalid">
+        Register
+      </button>
+
+    </form>
+
+    <a routerLink="/signin">Already have account?</a>
+
   </div>
 </div>

@@ -10,10 +10,12 @@ export class TaskService {
   constructor(private firestore: Firestore) {}
 
   // ➕ Add Task
-  addTask(task: any) {
-    const ref = collection(this.firestore, 'tasks');
-    return addDoc(ref, task);
-  }
+addTask(task: any) {
+  const ref = collection(this.firestore, 'tasks');
+  return addDoc(ref, task)
+    .then(res => console.log("ADDED OK", res))
+    .catch(err => console.log("ERROR", err));
+}
 
   // 📥 Get Tasks (REAL TIME)
   getTasks(): Observable<any[]> {

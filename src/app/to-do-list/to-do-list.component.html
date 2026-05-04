@@ -1,52 +1,17 @@
-<div class="container">
+<div class="todo-container">
 
-  <!-- HEADER -->
-  <div class="header-section">
+  <h2>My Tasks</h2>
 
-    <div class="welcome-text">
-      <h2>My Shared Tasks</h2>
-      <p>Total Tasks: {{tasks.length}}</p>
-    </div>
+  <form [formGroup]="form" (ngSubmit)="addTask()">
+    <input formControlName="title" placeholder="Add new task">
+    <button type="submit">Add</button>
+  </form>
 
-    <!-- ADD TASK -->
-    <div class="form">
-      <input [(ngModel)]="newTask" placeholder="Enter task title" class="action-btn">
-
-      <button class="add-task-btn" (click)="addTask()">
-        + Add Task
-      </button>
-    </div>
-
-  </div>
-
-  <!-- BOARD -->
-  <div class="board">
-
-    <div class="column">
-
-      <div class="column-header">
-        <h6>All Tasks ({{tasks.length}})</h6>
-      </div>
-
-      <div *ngFor="let task of tasks" class="card">
-
-        <!-- TASK TITLE -->
-        <h4>{{task.title}}</h4>
-
-        <!-- TIME -->
-        <small>{{task.createdAt?.toDate ? task.createdAt.toDate() : task.createdAt}}</small>
-
-        <!-- DELETE -->
-        <div class="card-actions">
-          <button class="action-btn delete" (click)="deleteTask(task.id)">
-            ❌ Delete
-          </button>
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
+  <ul>
+    <li *ngFor="let task of tasks">
+      {{task.title}}
+      <button (click)="deleteTask(task.id!)">❌</button>
+    </li>
+  </ul>
 
 </div>
