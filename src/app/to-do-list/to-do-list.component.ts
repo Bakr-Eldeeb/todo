@@ -8,7 +8,8 @@ import { CommonModule } from '@angular/common';
     standalone: true,
   imports: [CommonModule, FormsModule],
   selector: 'app-to-do-list',
-  templateUrl: './to-do-list.component.html'
+  templateUrl: './to-do-list.component.html',
+  styleUrls: ['./to-do-list.component.css']
 })
 export class ToDoListComponent implements OnInit {
 
@@ -17,13 +18,21 @@ export class ToDoListComponent implements OnInit {
 
   constructor(private taskService: TaskService) {}
 
-  ngOnInit() {
-    // 🔥 REALTIME LISTENER
-    this.taskService.getTasks((data) => {
-      this.tasks = data;
-    });
-  }
+private unsubscribe: (() => void) | null = null;
 
+ngOnInit() {
+  this.unsubscribe = this.taskService.getTasks((tasks) => {
+    console.log("snapshot fired"); // debug
+    this.tasks = tasks;
+  });
+}
+
+ngOnDestroy() {
+  if (this.unsubscribe) {
+    this.unsubscribe();
+    this.unsubscribe = null;
+  }
+}
   async addTask() {
     if (!this.newTask.title) return;
 

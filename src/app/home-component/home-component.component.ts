@@ -8,7 +8,9 @@ import { auth } from '../firebase.config';
   selector: 'app-home-component',
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink],
-  templateUrl: './home-component.component.html'
+  templateUrl: './home-component.component.html',
+  styleUrl: 'home-component.component.css'
+  
 })
 export class HomeComponentComponent {
 

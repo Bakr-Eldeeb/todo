@@ -8,7 +8,8 @@ import { auth } from '../firebase.config';
   selector: 'app-signup',
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink],
-  templateUrl: './signup.component.html'
+  templateUrl: './signup.component.html',
+  styleUrl: 'signup.component.css'
 })
 export class SignupComponent {
 

@@ -3,11 +3,11 @@
 
     <h1>Welcome Back</h1>
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form-group">
 
-      <input type="email" formControlName="email" placeholder="Email">
+      <input type="email" formControlName="email" placeholder="Email" class="inputs">
 
-      <input type="password" formControlName="password" placeholder="Password">
+      <input type="password" formControlName="password" placeholder="Password"  class="inputs">
 
       <button type="submit" [disabled]="loginForm.invalid" (click)="goToTodo()">
         Sign In
@@ -15,7 +15,7 @@
 
     </form>
 
-    <a routerLink="/sign-up">Create Account</a>
+    <a routerLink="/sign-up" class="create-account-link">Create Account</a>
 
   </div>
 </div>
