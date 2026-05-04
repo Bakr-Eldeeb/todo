@@ -8,6 +8,7 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponentComponent, pathMatch: 'full' },
 
   { path: 'sign-up', component: SignupComponent },
+  { path: 'todo', component: ToDoListComponent },
 
   {
     path: 'app',
