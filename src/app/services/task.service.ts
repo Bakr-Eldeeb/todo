@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, collectionData, deleteDoc, doc } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, collectionData, deleteDoc, doc, onSnapshot } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { db, auth } from '../firebase.config';
 
 @Injectable({
   providedIn: 'root'
@@ -10,17 +11,34 @@ export class TaskService {
   constructor(private firestore: Firestore) {}
 
   // ➕ Add Task
-addTask(task: any) {
-  const ref = collection(this.firestore, 'tasks');
-  return addDoc(ref, task)
-    .then(res => console.log("ADDED OK", res))
-    .catch(err => console.log("ERROR", err));
-}
+ async addTask(task: any) {
+    const user = auth.currentUser;
+
+    await addDoc(collection(db, "tasks"), {
+      title: task.title,
+      desc: task.desc || "",
+      status: "todo",
+
+      // 🔥 أهم حاجة
+      ownerId: user?.uid,
+      ownerEmail: user?.email,
+
+      createdAt: new Date()
+    });
+  }
 
   // 📥 Get Tasks (REAL TIME)
-  getTasks(): Observable<any[]> {
-    const ref = collection(this.firestore, 'tasks');
-    return collectionData(ref, { idField: 'id' }) as Observable<any[]>;
+  getTasks(callback: (tasks: any[]) => void) {
+    const ref = collection(db, "tasks");
+
+    onSnapshot(ref, (snapshot) => {
+      const tasks = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+
+      callback(tasks);
+    });
   }
 
   // ❌ Delete Task
