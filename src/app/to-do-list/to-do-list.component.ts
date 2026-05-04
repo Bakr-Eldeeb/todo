@@ -1,109 +1,46 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { DataService } from './../services/data.service';  // ← Adjust path if needed
+import { FormsModule } from '@angular/forms';
+import { TaskService } from '../services/task.service';
 
 interface Task {
-  id: number;
+  id?: string;
   title: string;
-  desc: string;
-  priority: 'high' | 'medium' | 'low';
-  status: 'todo' | 'inprogress' | 'done';
-  owner: string;      
-  sharedWith: string[]; 
-  created: Date;
+  createdAt: any;
 }
 
 @Component({
   selector: 'app-to-do-list',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './to-do-list.component.html',
   styleUrls: ['./to-do-list.component.css']
 })
 export class ToDoListComponent implements OnInit {
 
-  userName: string = '';
-  userEmail: string = '';
-  tasks: Task[] = []; 
+  tasks: Task[] = [];
+  newTask: string = '';
 
-  newTask: any = { title: '', desc: '', priority: 'medium' };
-
-  constructor(private dataService: DataService) {}
+  constructor(private taskService: TaskService) {}
 
   ngOnInit() {
-    const user = this.dataService.getCurrentUser();
-    if (user) {
-      this.userName = user.name || 'Guest';
-      this.userEmail = user.email || '';
-    }
-
-    this.loadTasks();
-  }
-
-  loadTasks() {
-    this.tasks = this.dataService.getAllTasks();
-  }
-
-  // Main getter used by template
-  get myVisibleTasks() {
-    return this.dataService.getVisibleTasksForUser(this.userEmail);
-  }
-
-  get todoTasks() { 
-    return this.myVisibleTasks.filter((t: Task) => t.status === 'todo'); 
-  }
-
-  get inProgressTasks() { 
-    return this.myVisibleTasks.filter((t: Task) => t.status === 'inprogress'); 
-  }
-
-  get doneTasks() { 
-    return this.myVisibleTasks.filter((t: Task) => t.status === 'done'); 
+    this.taskService.getTasks().subscribe(data => {
+      this.tasks = data;
+    });
   }
 
   addTask() {
-    if (!this.newTask.title.trim() || !this.userEmail) return;
+    if (!this.newTask.trim()) return;
 
-    const taskToAdd: Task = {
-      id: Date.now(),
-      title: this.newTask.title,
-      desc: this.newTask.desc || '',
-      priority: this.newTask.priority,
-      status: 'todo',
-      owner: this.userEmail,
-      sharedWith: [],
-      created: new Date()
-    };
+    this.taskService.addTask({
+      title: this.newTask,
+      createdAt: new Date()
+    });
 
-    this.dataService.addTask(taskToAdd);
-    this.loadTasks();
-    this.resetForm();
+    this.newTask = '';
   }
 
-  shareTask(task: Task, friendEmail: string) {
-    if (!friendEmail || friendEmail === this.userEmail) return;
-
-    const success = this.dataService.shareTask(task.id, friendEmail.trim());
-    if (success) {
-      alert(`✅ Shared successfully with ${friendEmail}`);
-      this.loadTasks();
-    } else {
-      alert('Failed to share or already shared');
-    }
-  }
-
-  moveTask(task: Task, status: 'todo' | 'inprogress' | 'done') {
-    this.dataService.updateTaskStatus(task.id, status);
-    this.loadTasks();
-  }
-
-  deleteTask(id: number) {
-    this.dataService.deleteTask(id);
-    this.loadTasks();
-  }
-
-  resetForm() {
-    this.newTask = { title: '', desc: '', priority: 'medium' };
+  deleteTask(id: string) {
+    this.taskService.deleteTask(id);
   }
 }
