@@ -3,11 +3,12 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase.config';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home-component',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './home-component.component.html',
   styleUrls: ['./home-component.component.css']
 })

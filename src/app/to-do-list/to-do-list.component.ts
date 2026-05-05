@@ -14,8 +14,7 @@ import {
   onSnapshot,
   serverTimestamp
 } from 'firebase/firestore';
-import { auth, db } from '../firebase';
-
+import { auth, db } from '../firebase.config';
 interface Task {
   id: string;
   title: string;
@@ -67,6 +66,7 @@ export class ToDoComponent implements OnInit {
   }
 
   async addTask() {
+     console.log("clicked"); // مهم
     if (!this.newTask.trim() || !this.user) return;
 
     await addDoc(collection(db, 'tasks'), {
