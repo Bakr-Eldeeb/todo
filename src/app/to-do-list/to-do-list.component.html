@@ -1,47 +1,38 @@
-<div class="todo-container">
-
-  <!-- Header -->
-  <div class="header">
-    <h2>🔥 My Tasks</h2>
-  
-  </div>
-
-  <!-- Add Task Form -->
-  <form (ngSubmit)="addTask()" class="task-form">
-
-    <input
-      [(ngModel)]="newTask.title"
-      name="title"
-      placeholder="Task title..."
-      required
-    />
-
-    <input
-      [(ngModel)]="newTask.desc"
-      name="desc"
-      placeholder="Task description..."
-    />
-
-    <button type="submit" >➕ Add</button>
-  </form>
-
-  <!-- Tasks List -->
-  <ul class="task-list">
-
-    <li *ngFor="let task of tasks" class="task-item">
-
-      <div class="task-info">
-        <h4>{{ task.title }}</h4>
-        <p>{{ task.desc }}</p>
-        <small>👤 {{ task.ownerEmail }}</small>
+<div class="todo-page">
+  <div class="todo-card">
+    <div class="top-bar">
+      <div>
+        <h1>My Tasks</h1>
+        <p>{{ user?.email }}</p>
       </div>
 
-      <button class="delete-btn" (click)="deleteTask(task.id)">
-        ❌
-      </button>
+      <button class="logout" (click)="logout()">Logout</button>
+    </div>
 
-    </li>
+    <div class="add-box">
+      <input
+        type="text"
+        placeholder="Add new task..."
+        [(ngModel)]="newTask"
+        (keyup.enter)="addTask()"
+      >
 
-  </ul>
+      <button (click)="addTask()">Add Task</button>
+    </div>
 
+    <div class="tasks" *ngIf="tasks.length > 0; else noTasks">
+      <div class="task" *ngFor="let task of tasks">
+        <span>{{ task.title }}</span>
+
+        <div class="actions">
+          <button class="share" (click)="shareTask(task)">Share</button>
+          <button class="delete" (click)="deleteTask(task.id)">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noTasks>
+      <p class="empty">No tasks yet. Add your first task.</p>
+    </ng-template>
+  </div>
 </div>

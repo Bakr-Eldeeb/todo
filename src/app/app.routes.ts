@@ -7,17 +7,10 @@ export const routes: Routes = [
   { path: '', component: HomeComponentComponent, pathMatch: 'full' },
   { path: 'home', component: HomeComponentComponent, pathMatch: 'full' },
 
-  { path: 'sign-up', component: SignupComponent },
+  { path: 'signup', component: SignupComponent },
   { path: 'todo', component: ToDoListComponent },
 
-  {
-    path: 'app',
-    component: LayoutComponent,
-    children: [
-      { path: 'todo', component: ToDoListComponent },
-      { path: '', redirectTo: 'todo', pathMatch: 'full' }
-    ]
-  },
+
 
   { path: '**', redirectTo: 'home' }
 ];

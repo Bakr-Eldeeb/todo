@@ -1,21 +1,19 @@
-<div class="signup-wrapper">
-  <div class="signup-card">
+<div class="auth-page">
+  <div class="auth-card">
+    <h1>Sign Up</h1>
+    <p>Create your account to save your tasks.</p>
 
-    <h2>Sign Up</h2>
+    <input type="email" placeholder="Email" [(ngModel)]="email">
+    <input type="password" placeholder="Password" [(ngModel)]="password">
+    <input type="password" placeholder="Confirm Password" [(ngModel)]="confirmPassword">
 
-    <form [formGroup]="registerForm" (ngSubmit)="register()">
+    <button (click)="signup()">Create Account</button>
 
-      <input formControlName="email" placeholder="Email" type="email">
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
 
-      <input formControlName="password" placeholder="Password" type="password">
-
-      <button type="submit" [disabled]="registerForm.invalid">
-        Register
-      </button>
-
-    </form>
-
-    <a routerLink="/signin">Already have account?</a>
-
+    <p class="link">
+      Already have an account?
+      <a routerLink="/">Login</a>
+    </p>
   </div>
 </div>

@@ -1,46 +1,97 @@
 import { Component, OnInit } from '@angular/core';
-import { TaskService } from '../services/task.service';
-import { auth } from '../firebase.config';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { signOut, onAuthStateChanged, User } from 'firebase/auth';
+import {
+  collection,
+  addDoc,
+  deleteDoc,
+  doc,
+  query,
+  where,
+  orderBy,
+  onSnapshot,
+  serverTimestamp
+} from 'firebase/firestore';
+import { auth, db } from '../firebase';
+
+interface Task {
+  id: string;
+  title: string;
+  userId: string;
+}
 
 @Component({
-    standalone: true,
+  selector: 'app-to-do',
+  standalone: true,
   imports: [CommonModule, FormsModule],
-  selector: 'app-to-do-list',
   templateUrl: './to-do-list.component.html',
   styleUrls: ['./to-do-list.component.css']
 })
-export class ToDoListComponent implements OnInit {
+export class ToDoComponent implements OnInit {
+  user: User | null = null;
+  newTask = '';
+  tasks: Task[] = [];
+  errorMessage = '';
 
-  tasks: any[] = [];
-  newTask = { title: '', desc: '' };
+  constructor(private router: Router) {}
 
-  constructor(private taskService: TaskService) {}
+  ngOnInit() {
+    onAuthStateChanged(auth, (currentUser) => {
+      if (!currentUser) {
+        this.router.navigate(['/']);
+        return;
+      }
 
-private unsubscribe: (() => void) | null = null;
-
-ngOnInit() {
-  this.unsubscribe = this.taskService.getTasks((tasks) => {
-    console.log("snapshot fired"); // debug
-    this.tasks = tasks;
-  });
-}
-
-ngOnDestroy() {
-  if (this.unsubscribe) {
-    this.unsubscribe();
-    this.unsubscribe = null;
+      this.user = currentUser;
+      this.loadTasks();
+    });
   }
-}
+
+  loadTasks() {
+    if (!this.user) return;
+
+    const q = query(
+      collection(db, 'tasks'),
+      where('userId', '==', this.user.uid),
+      orderBy('createdAt', 'desc')
+    );
+
+    onSnapshot(q, (snapshot) => {
+      this.tasks = snapshot.docs.map(docSnap => ({
+        id: docSnap.id,
+        ...(docSnap.data() as Omit<Task, 'id'>)
+      }));
+    });
+  }
+
   async addTask() {
-    if (!this.newTask.title) return;
+    if (!this.newTask.trim() || !this.user) return;
 
-    await this.taskService.addTask(this.newTask);
+    await addDoc(collection(db, 'tasks'), {
+      title: this.newTask,
+      userId: this.user.uid,
+      userEmail: this.user.email,
+      createdAt: serverTimestamp()
+    });
 
-    this.newTask = { title: '', desc: '' };
+    this.newTask = '';
   }
-   async deleteTask(id: string) {
-    await this.taskService.deleteTask(id);
+
+  async deleteTask(taskId: string) {
+    await deleteDoc(doc(db, 'tasks', taskId));
+  }
+
+  shareTask(task: Task) {
+    const subject = encodeURIComponent('Shared Task');
+    const body = encodeURIComponent(`Task: ${task.title}`);
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+  }
+
+  logout() {
+    signOut(auth).then(() => {
+      this.router.navigate(['/']);
+    });
   }
 }

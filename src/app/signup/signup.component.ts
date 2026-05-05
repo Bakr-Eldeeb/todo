@@ -1,35 +1,38 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase.config';
+import { auth } from '../firebase';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [FormsModule, RouterLink],
   templateUrl: './signup.component.html',
-  styleUrl: 'signup.component.css'
+  styleUrls: ['./signup.component.css']
 })
 export class SignupComponent {
-
-  registerForm = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(6)])
-  });
+  email = '';
+  password = '';
+  confirmPassword = '';
+  errorMessage = '';
 
   constructor(private router: Router) {}
 
-  async register() {
-    if (this.registerForm.invalid) return;
+  signup() {
+    this.errorMessage = '';
 
-    const { email, password } = this.registerForm.value;
-
-    try {
-      await createUserWithEmailAndPassword(auth, email!, password!);
-      this.router.navigate(['/signin']);
-    } catch (err) {
-      alert("Signup Failed");
+    if (this.password !== this.confirmPassword) {
+      this.errorMessage = 'Passwords do not match';
+      return;
     }
+
+    createUserWithEmailAndPassword(auth, this.email, this.password)
+      .then(() => {
+        this.router.navigate(['/todo']);
+      })
+      .catch(() => {
+        this.errorMessage = 'Signup failed. Try another email or stronger password.';
+      });
   }
 }

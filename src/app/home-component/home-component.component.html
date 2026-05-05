@@ -1,21 +1,18 @@
-<div class="login-wrapper">
-  <div class="login-card">
+<div class="auth-page">
+  <div class="auth-card">
+    <h1>Login</h1>
+    <p>Welcome back! Please login to continue.</p>
 
-    <h1>Welcome Back</h1>
+    <input type="email" placeholder="Email" [(ngModel)]="email">
+    <input type="password" placeholder="Password" [(ngModel)]="password">
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form-group">
+    <button (click)="login()">Login</button>
 
-      <input type="email" formControlName="email" placeholder="Email" class="inputs">
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
 
-      <input type="password" formControlName="password" placeholder="Password"  class="inputs">
-
-      <button type="submit" [disabled]="loginForm.invalid" (click)="goToTodo()">
-        Sign In
-      </button>
-
-    </form>
-
-    <a routerLink="/sign-up" class="create-account-link">Create Account</a>
-
+    <p class="link">
+      Don't have an account?
+      <a routerLink="/signup">Sign Up</a>
+    </p>
   </div>
 </div>
