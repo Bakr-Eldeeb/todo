@@ -8,7 +8,7 @@
 }
 
 .todo-card {
-  width: 650px;
+  width: 700px;
   background: white;
   padding: 30px;
   border-radius: 18px;
@@ -49,6 +49,7 @@
   padding: 13px;
   border: 1px solid #ccc;
   border-radius: 10px;
+  outline: none;
 }
 
 .add-box button {
@@ -68,6 +69,22 @@
   padding: 15px;
   border-radius: 12px;
   margin-bottom: 12px;
+}
+
+.task-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.task-info span {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.shared {
+  color: #666;
+  font-size: 12px;
 }
 
 .actions {

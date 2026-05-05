@@ -1,5 +1,6 @@
 <div class="todo-page">
   <div class="todo-card">
+
     <div class="top-bar">
       <div>
         <h1>My Tasks</h1>
@@ -22,17 +23,43 @@
 
     <div class="tasks" *ngIf="tasks.length > 0; else noTasks">
       <div class="task" *ngFor="let task of tasks">
-        <span>{{ task.title }}</span>
+
+        <div class="task-info">
+          <span>{{ task.title }}</span>
+
+          <small *ngIf="task.userId !== user?.uid" class="shared">
+            Shared from: {{ task.userEmail }}
+          </small>
+
+          <small *ngIf="task.userId === user?.uid && (task.sharedWith?.length || 0) > 0" class="shared">
+  Shared with: {{ task.sharedWith?.join(', ') }}
+</small>
+        </div>
 
         <div class="actions">
-          <button class="share" (click)="shareTask(task)">Share</button>
-          <button class="delete" (click)="deleteTask(task.id)">Delete</button>
+          <button
+            class="share"
+            *ngIf="task.userId === user?.uid"
+            (click)="shareTask(task)"
+          >
+            Share
+          </button>
+
+          <button
+       class="delete"
+      *ngIf="task.userId === user?.uid"
+      (click)="deleteTask(task)"
+>
+  Delete
+</button>
         </div>
+
       </div>
     </div>
 
     <ng-template #noTasks>
       <p class="empty">No tasks yet. Add your first task.</p>
     </ng-template>
+
   </div>
 </div>
